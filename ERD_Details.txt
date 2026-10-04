@@ -1,0 +1,66 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table Customers {
+  customer_id integer [primary key]
+  username varchar(50) [not null]
+  email varchar(50) [not null, unique]
+  adress varchar(50) [not null]
+  phone nvarchar(20) [not null, unique]
+  join_date datetime
+}
+
+Table Product {
+  product_id integer [primary key]
+  poduct_name varchar(50) [not null]
+  product_category varchar(50) [not null]
+  selling_price decimal(10,2) [not null] // 
+  product_quantity int [not null]
+}
+
+Table orders {
+  order_id integer [primary key]
+  customer_id integer [not null]
+  order_date datetime
+  order_status varchar(30)
+}
+
+Table order_details {
+  order_id integer [not null]
+  poduct_id integer [not null]
+  selling_price decimal(10,2) [not null] // 
+  required_quantity int [not null]
+
+  indexes {
+    (order_id, poduct_id) [pk]
+  }
+}
+
+Table payments {
+  payment_id integer [primary key]
+  order_id integer [not null, unique]
+  payment_date datetime
+  amount decimal(10,2) // 
+  payment_method varchar(20)
+}
+
+Table reviews {
+  review_id integer [primary key]
+  customer_id integer [not null]
+  poduct_id integer [not null]
+  comment varchar(300) [null]  
+  rating integer [not null]
+  review_date datetime
+}
+
+Ref: orders.order_id < order_details.order_id
+
+Ref: Product.product_id < order_details.poduct_id
+
+Ref: Customers.customer_id < orders.customer_id
+
+Ref: orders.order_id - payments.order_id
+
+Ref: Customers.customer_id < reviews.customer_id
+
+Ref: Product.product_id < reviews.poduct_id
